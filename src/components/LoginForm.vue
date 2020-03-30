@@ -30,45 +30,17 @@
         </button>
       </router-link>
     </div>
-    <div id="chat">
-      <h2>Chat</h2>
-      <form class="chatform" @submit.prevent="chat">
-        <input name="message" id="input" />
-        <input class="submit" type="submit" />
-      </form>
-      <ul class="messages" v-for="(message, i) in messageList" :key="i + 1">
-        <li>{{ message.text }}</li>
-      </ul>
-    </div>
   </div>
 </template>
 <script>
-const ws = new WebSocket("wss://backend.cleverapps.io");
 export default {
   name: "LoginForm",
   data() {
     return {
-      form: { username: "", password: "" },
-      tocken: "",
-      messageList: []
+      form: { username: "", password: "" }
     };
-  },
-  mounted() {
-    let messages = [];
-    ws.onmessage = function(msg) {
-      messages.push({ text: msg.data });
-    };
-    this.messageList = messages;
   },
   methods: {
-    chat: function(e) {
-      e.preventDefault();
-      var input = document.getElementById("input");
-      var text = input.value;
-      ws.send(text);
-      input.value = "";
-      input.focus();
-    },
     async submit() {
       const login = this.axios.create({
         withCredentials: true
@@ -90,11 +62,11 @@ export default {
         .get("https://backend.cleverapps.io/wsTicket")
         .then(data => {
           this.form.tocken = data.data;
-          ws.send(this.form.tocken);
         })
         .catch(error => {
           console.log(error);
         });
+      this.$router.push({ name: "chat", params: { token: this.form.tocken } });
     }
   }
 };
