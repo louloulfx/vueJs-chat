@@ -1,12 +1,7 @@
 <template>
   <div class="body">
     <div class="container_inscription" id="container_inscription">
-      <form
-        name="inscription"
-        id="inscription"
-        class="inscription"
-        @submit.prevent="submit"
-      >
+      <form name="inscription" class="inscription" @submit.prevent="submit">
         <h1 class="p_inscription">Inscription</h1>
         <hr />
         <label for="username">Username</label>
@@ -14,7 +9,6 @@
           class="input"
           type="text"
           name="username"
-          id="username"
           v-model="form.username"
           placeholder="USERNAME"
           required
@@ -24,7 +18,6 @@
           class="input"
           type="text"
           name="email"
-          id="email"
           v-model="form.email"
           placeholder="EMAIL"
           required
@@ -34,13 +27,17 @@
           class="input"
           type="password"
           name="password"
-          id="password"
           v-model="form.password"
           placeholder="PASSWORD"
           required
         />
         <input class="action-button" type="submit" value="REGISTER" />
       </form>
+      <router-link class="createAccount2" to="/">
+        <button class="createAccount" id="createAccount">
+          Se connecter
+        </button>
+      </router-link>
     </div>
   </div>
 </template>
@@ -61,10 +58,11 @@ export default {
           password: this.form.password
         })
         .then(function(response) {
-          console.log(response.data);
+          console.log(response);
         })
         .catch(function(error) {
           console.log(error);
+          alert("username already exist");
         });
     }
   }
@@ -140,6 +138,10 @@ hr {
   cursor: pointer;
   padding: 10px 5px;
   margin: 10px 5px;
+}
+
+.createAccount2 {
   align-self: center;
+  cursor: pointer;
 }
 </style>
