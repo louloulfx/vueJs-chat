@@ -1,7 +1,12 @@
 <template>
   <div class="body">
     <div class="container_inscription" id="container_inscription">
-      <form name="inscription" id="inscription" class="inscription">
+      <form
+        name="inscription"
+        id="inscription"
+        class="inscription"
+        @submit.prevent="submit"
+      >
         <h1 class="p_inscription">Inscription</h1>
         <hr />
         <label for="username">Username</label>
@@ -10,28 +15,59 @@
           type="text"
           name="username"
           id="username"
+          v-model="form.username"
           placeholder="USERNAME"
           required
         />
         <label for="email">Email</label>
-        <input class="input" type="text" name="email" id="email" placeholder="EMAIL" required />
+        <input
+          class="input"
+          type="text"
+          name="email"
+          id="email"
+          v-model="form.email"
+          placeholder="EMAIL"
+          required
+        />
         <label for="password">Password</label>
         <input
           class="input"
           type="password"
           name="password"
           id="password"
+          v-model="form.password"
           placeholder="PASSWORD"
           required
         />
-        <input class="action-button" type="button" value="REGISTER" />
+        <input class="action-button" type="submit" value="REGISTER" />
       </form>
     </div>
   </div>
 </template>
 <script>
 export default {
-  name: "RegisterForm"
+  name: "RegisterForm",
+  data() {
+    return {
+      form: { username: "", email: "", password: "" }
+    };
+  },
+  methods: {
+    submit() {
+      this.axios
+        .post("https://backend.cleverapps.io/subscribe", {
+          username: this.form.username,
+          email: this.form.email,
+          password: this.form.password
+        })
+        .then(function(response) {
+          console.log(response.data);
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
+    }
+  }
 };
 </script>
 <style scoped>
