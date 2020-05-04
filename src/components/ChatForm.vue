@@ -141,9 +141,8 @@ export default {
 .cadre {
   border: 1px solid black;
   margin-left: 50px;
-  height: 700px;
-  padding-bottom: -10px;
-  width: 1200px;
+  height: 500px;
+  width: 500px;
 }
 #chat {
   display: flex;
