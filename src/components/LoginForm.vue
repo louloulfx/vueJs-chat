@@ -25,9 +25,7 @@
         <input class="action-button" type="submit" value="LOGIN" />
       </form>
       <router-link class="createAccount2" to="/register">
-        <button class="createAccount" id="createAccount">
-          Créer un compte
-        </button>
+        <button class="createAccount" id="createAccount">Créer un compte</button>
       </router-link>
     </div>
   </div>

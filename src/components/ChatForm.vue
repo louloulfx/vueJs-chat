@@ -31,7 +31,6 @@ export default {
     }
     let messages = [];
     ws.onmessage = function(msg) {
-      messages.push({ text: msg.data });
       if (msg.data.includes("mov:") === true) {
         var index = msg.data.indexOf(":");
         var index2 = msg.data.indexOf("mov:");
@@ -42,6 +41,15 @@ export default {
           coordonnate.indexOf(",") + 1,
           coordonnate.length
         );
+        var letters = "0123456789ABCDEF";
+        var color = "#";
+        var color2 = "#";
+        var color3 = "#";
+        for (var i = 0; i < 6; i++) {
+          color += letters[Math.floor(Math.random() * 16)];
+          color2 += letters[Math.floor(Math.random() * 16)];
+          color3 += letters[Math.floor(Math.random() * 16)];
+        }
         var cadre = document.getElementById("cadre");
         var moveX = parseInt(x) + cadre.offsetLeft;
         var moveY = parseInt(y) + cadre.offsetTop;
@@ -51,28 +59,45 @@ export default {
           newElement.style.width = "50px";
           newElement.style.height = "50px";
           newElement.style.position = "absolute";
-          newElement.style.border = "1px solid black";
+          newElement.style.border = "1px solid" + color2;
           newElement.style.left = moveX + "px";
           newElement.style.top = moveY + "px";
+          newElement.style.color = color;
+          newElement.style.background = color3;
           newElement.textContent = username;
-          newElement.id = "louloulfx";
+          newElement.id = username;
           document.getElementById("cadre").appendChild(newElement);
         } else {
           element.style.width = "50px";
           element.style.height = "50px";
           element.style.position = "absolute";
-          element.style.border = "1px solid black";
+          element.style.border = "1px solid" + color2;
           element.style.left = moveX + "px";
           element.style.top = moveY + "px";
+          element.style.color = color;
+          element.style.background = color3;
           element.textContent = username;
-          element.id = "louloulfx";
+          element.id = username;
           document.getElementById("cadre").appendChild(element);
         }
+      } else if (msg.data.includes("msg:") === true) {
+        var newIndex = msg.data.indexOf("msg:");
+        var newUsername = msg.data.slice(0, newIndex - 1);
+        var text = newUsername + msg.data.slice(newIndex + 4, msg.data.length);
+        messages.push({ text: text });
       }
     };
     this.messageList = messages;
   },
   methods: {
+    getRandomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    },
     getPosition(event) {
       var cadre = document.getElementById("cadre");
       var y = event.pageY;
@@ -85,18 +110,9 @@ export default {
       e.preventDefault();
       var input = document.getElementById("input");
       var text = input.value;
-      if (text.indexOf("msg:") === 0) {
-        text = text.substr(4);
-        ws.send(text);
-        input.value = "";
-        input.focus();
-      } else {
-        alert(
-          "Pour envoyer un message il suffit de faire: msg: 'le contenu du message', et pour envoyer une position il faut faire: move: 'position'"
-        );
-        input.value = "";
-        input.focus();
-      }
+      ws.send("msg: " + text);
+      input.value = "";
+      input.focus();
     },
     async logout() {
       const login = this.axios.create({
@@ -123,6 +139,7 @@ export default {
   border: 1px solid black;
   margin-left: 50px;
   height: 700px;
+  padding-bottom: -10px;
   width: 1200px;
 }
 #chat {
