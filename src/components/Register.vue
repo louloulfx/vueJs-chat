@@ -10,6 +10,9 @@ export default {
   name: "Register",
   components: {
     registerForm
+  },
+  created() {
+    document.title = "Web-Socket /register";
   }
 };
 </script>

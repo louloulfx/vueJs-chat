@@ -22,6 +22,7 @@ export default {
     return { messageList: [] };
   },
   created() {
+    document.title = "Web-Socket /chat";
     var token = this.$route.params.token;
     ws.send(token);
   },
@@ -85,6 +86,8 @@ export default {
         var newUsername = msg.data.slice(0, newIndex - 1);
         var text = newUsername + msg.data.slice(newIndex + 4, msg.data.length);
         messages.push({ text: text });
+      } else {
+        messages.push({ text: msg.data });
       }
     };
     this.messageList = messages;

@@ -10,6 +10,9 @@ export default {
   name: "Login",
   components: {
     loginForm
+  },
+  created() {
+    document.title = "Web-Socket /login";
   }
 };
 </script>

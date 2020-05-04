@@ -2,7 +2,7 @@ import Vue from "vue";
 import Router from "vue-router";
 import Login from "../components/Login";
 import Register from "../components/Register";
-import Chart from "../components/ChatScreen";
+import Chat from "../components/ChatScreen";
 
 Vue.use(Router);
 
@@ -23,7 +23,7 @@ const router = new Router({
     {
       path: "/chat",
       name: "chat",
-      component: Chart,
+      component: Chat,
       props: true,
     },
   ],
