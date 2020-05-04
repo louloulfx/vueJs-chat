@@ -11,7 +11,13 @@
       </ul>
       <button type="submit" v-on:click="logout()">Disconnect</button>
     </div>
-    <div v-on:click="getPosition" class="cadre" id="cadre"></div>
+    <div v-on:click="getPosition" class="cadre" id="cadre">
+      <div v-for="(user, i) in users" :key="i+1">
+        <div
+          v-bind:style="'left:' + user.x + 'px;' + 'top:' + user.y +'px;' +'position:absolute;height:50px;width:50px; background: #85D8CE; border: 1px solid black'"
+        >{{user.username}}</div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -19,7 +25,7 @@ const ws = new WebSocket("wss://backend.cleverapps.io");
 export default {
   name: "ChatForm",
   data() {
-    return { messageList: [] };
+    return { messageList: [], users: [] };
   },
   created() {
     document.title = "Web-Socket /chat";
@@ -31,6 +37,7 @@ export default {
       this.$router.push({ name: "login" });
     }
     let messages = [];
+    let users = [];
     ws.onmessage = function(msg) {
       if (msg.data.includes("mov:") === true) {
         var index = msg.data.indexOf(":");
@@ -54,32 +61,23 @@ export default {
         var cadre = document.getElementById("cadre");
         var moveX = parseInt(x) + cadre.offsetLeft;
         var moveY = parseInt(y) + cadre.offsetTop;
-        var element = document.getElementById(username);
-        if (element === null) {
-          var newElement = document.createElement(username);
-          newElement.style.width = "50px";
-          newElement.style.height = "50px";
-          newElement.style.position = "absolute";
-          newElement.style.border = "1px solid" + color2;
-          newElement.style.left = moveX + "px";
-          newElement.style.top = moveY + "px";
-          newElement.style.color = color;
-          newElement.style.background = color3;
-          newElement.textContent = username;
-          newElement.id = username;
-          document.getElementById("cadre").appendChild(newElement);
+
+        let userExists = users.some(function(el) {
+          return el.username === username;
+        });
+        if (userExists) {
+          let objetIndex = users.findIndex(obj => obj.username === username);
+          users[objetIndex].x = moveX;
+          users[objetIndex].y = moveY;
         } else {
-          element.style.width = "50px";
-          element.style.height = "50px";
-          element.style.position = "absolute";
-          element.style.border = "1px solid" + color2;
-          element.style.left = moveX + "px";
-          element.style.top = moveY + "px";
-          element.style.color = color;
-          element.style.background = color3;
-          element.textContent = username;
-          element.id = username;
-          document.getElementById("cadre").appendChild(element);
+          users.push({
+            username: username,
+            x: moveX,
+            y: moveY,
+            bordercolor: color,
+            textcolor: color2,
+            background: color3
+          });
         }
       } else if (msg.data.includes("msg:") === true) {
         var newIndex = msg.data.indexOf("msg:");
@@ -91,6 +89,7 @@ export default {
       }
     };
     this.messageList = messages;
+    this.users = users;
   },
   methods: {
     getRandomColor() {
